@@ -1,0 +1,62 @@
+---
+- name: Initial Updates and Package Installs
+  connection: ssh
+  gather_facts: false
+  hosts: all
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: Remove apt lock file
+      file:
+        state: absent
+        path: "/var/lib/dpkg/lock-frontend"
+      become: true
+      tags: apt
+
+    - name: Update and upgrade apt packages
+      become: "yes"
+      apt:
+        upgrade: "yes"
+        update_cache: "yes"
+        # cache_valid_time: 86400 #One day
+
+    - name: Update, dist-upgrade, and autoremove apt packages
+      become: "yes"
+      apt:
+        upgrade: dist
+        update_cache: "yes"
+        autoremove: "yes"
+        # cache_valid_time: 86400 #One day
+
+    - name: Install aptitude
+      become: "yes"
+      apt:
+        name: "{{ packages }}"
+        update_cache: "yes"
+      vars:
+        packages:
+        - aptitude
+
+    - name: Install a gcc build tools
+      become: "yes"
+      apt:
+        name: "{{ packages }}"
+        update_cache: "yes"
+      vars:
+        packages:
+        - build-essential
+        - cmake
+
+
+#   - name: Ensure export of CUDA LD_LIBRARY_PATH
+#     # become: "yes"
+#     lineinfile:
+#       dest: "/home/{{ ansible_ssh_user }}/.bashrc"
+#       line: 'export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda/lib64'
+
+#   - name: Ensure export of CUDA PATH
+#     # become: "yes"
+#     lineinfile:
+#       dest: "/home/{{ ansible_ssh_user }}/.bashrc"
+#       # regexp="^export PATH=$PATH:$SPARK_HOME\s"
+#       line: 'export PATH=$PATH:/usr/local/cuda-10.0/bin/'

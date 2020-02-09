@@ -1,0 +1,45 @@
+---
+- name: Python Installs & Python MPI on system
+  connection: ssh
+  gather_facts: false
+  hosts: all
+  tasks:
+    - name: Install a Python3 VENV and pip
+      become: "yes"
+      apt:
+        name: "{{ packages }}"
+        update_cache: "yes"
+      vars:
+        packages:
+        - python3-venv
+        - python3-pip
+        - python3-scipy
+        - gfortran
+        - python-dev
+        - cython
+        - libatlas3-base
+        - libatlas-base-dev
+        - libopenblas-base
+        - libopenblas-dev
+        - libblas3
+        - libblas-dev
+        - liblapack3
+        - liblapack-dev
+        - jupyter-notebook
+    - name: Upgrade pip
+      become: "yes"
+      pip:
+        name: pip
+        extra_args: --upgrade
+        executable: pip3
+    - name: Upgrade wheel
+      become: "yes"
+      pip:
+        name: wheel
+        extra_args: --upgrade
+        executable: pip3
+    - name: Install NumPy
+      become: "yes"
+      pip:
+        name: numpy
+        executable: pip3

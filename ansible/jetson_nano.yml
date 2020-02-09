@@ -1,0 +1,5 @@
+---
+- name: Include Initial playbook
+  import_playbook: initial.yml
+- name: Include Python playbook
+  import_playbook: python.yml
