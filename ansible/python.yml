@@ -26,10 +26,19 @@
         - liblapack3
         - liblapack-dev
         - jupyter-notebook
+        - libhdf5-serial-dev 
+        - hdf5-tools 
+        - libhdf5-dev 
+        - zlib1g-dev 
+        - zip 
+        - libjpeg8-dev
     - name: Upgrade pip
       become: "yes"
       pip:
-        name: pip
+        name:
+            - pip
+            - testresources
+            - setuptools
         extra_args: --upgrade
         executable: pip3
     - name: Upgrade wheel
@@ -38,8 +47,44 @@
         name: wheel
         extra_args: --upgrade
         executable: pip3
-    - name: Install NumPy
+    - name: Install NumPy and other packages
       become: "yes"
       pip:
-        name: numpy
         executable: pip3
+        name:
+            - pandas
+            - matplotlib
+            - tqdm
+            - jupyterthemes
+            - numpy
+            - future
+            - mock
+            - h5py
+            - keras_preprocessing
+            - keras_applications
+            - gast
+            - enum34
+            - futures
+            - protobuf
+            - grpcio
+            - absl-py
+            - py-cpuinfo
+            - psutil
+            - portpicker
+            - six
+            - requests
+            - astor
+            - termcolor
+            - wrapt
+            - google-pasta
+    - name: Install TensorFlow
+      become: "yes"
+      pip:
+        name: tensorflow-gpu
+        extra_args: --pre --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v43
+        executable: pip3
+    - name: Jupyter Theme Settings
+      command: jt -t monokai -f fira {{ item }}
+      with_items: 
+        - -fs 13 -nf ptsans -nfs 11 -N -kl -cursw 5 -cursc r -cellw 95% -T
+        - -fs 11 -nf ptsans -nfs 11 -N -kl -cursw 5 -cursc r -cellw 95% -T -vim
