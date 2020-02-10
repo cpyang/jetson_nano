@@ -25,6 +25,8 @@
         - libblas-dev
         - liblapack3
         - liblapack-dev
+        - libfreetype6
+        - libfreetype6-dev
         - jupyter-notebook
         - libhdf5-serial-dev 
         - hdf5-tools 
@@ -32,6 +34,28 @@
         - zlib1g-dev 
         - zip 
         - libjpeg8-dev
+#       - javascript-common
+#       - fonts-mathjax
+#       - fonts-font-awesome
+#       - libjs-mathjax
+#       - libjs-jed
+#       - libjs-backbone
+#       - libjs-bootstrap-tour
+#       - libjs-bootstrap
+#       - libjs-codemirror
+#       - libjs-es6-promise
+#       - libjs-jquery-ui
+#       - libjs-jquery
+#       - libjs-jquery-typeahead
+#       - libjs-marked
+#       - libjs-moment
+#       - libjs-requirejs
+#       - libjs-requirejs-text
+#       - libjs-text-encoding
+#       - libjs-underscore
+#       - libjs-xterm
+#       - liblua5.1-0
+#       - pandoc
     - name: Upgrade pip
       become: "yes"
       pip:
@@ -55,6 +79,7 @@
             - pandas
             - matplotlib
             - tqdm
+            - jupyter
             - jupyterthemes
             - numpy
             - future
