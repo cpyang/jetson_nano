@@ -1,5 +1,5 @@
 ---
-- name: Python Installs & Python MPI on system
+- name: Python environment & computing packages installation
   connection: ssh
   gather_facts: false
   hosts: all
@@ -11,50 +11,52 @@
         update_cache: "yes"
       vars:
         packages:
+        - zip 
+        - protobuf-compiler
+        - libprotobuf-dev
+        - openssl
+        - libssl-dev
+        - libcurl4-openssl-dev
+        - python3-setuptools
         - python3-venv
         - python3-pip
-        - python3-scipy
+        - python3-dev
         - gfortran
-        - python-dev
-        - cython
         - libatlas3-base
         - libatlas-base-dev
         - libopenblas-base
         - libopenblas-dev
+        - musl
+        - musl-dev
+        - liblapack3
+        - liblapack-dev
         - libblas3
         - libblas-dev
         - liblapack3
         - liblapack-dev
+        - liblapacke
+        - liblapacke-dev
         - libfreetype6
         - libfreetype6-dev
+        - libffi6
+        - libffi-dev
+        - libpython3-dev
         - libhdf5-serial-dev 
         - hdf5-tools 
         - libhdf5-dev 
+        - libssl-dev
         - zlib1g-dev 
-        - zip 
         - libjpeg8-dev
-#       - javascript-common
-#       - fonts-mathjax
-#       - fonts-font-awesome
-#       - libjs-mathjax
-#       - libjs-jed
-#       - libjs-backbone
-#       - libjs-bootstrap-tour
-#       - libjs-bootstrap
-#       - libjs-codemirror
-#       - libjs-es6-promise
-#       - libjs-jquery-ui
-#       - libjs-jquery
-#       - libjs-jquery-typeahead
-#       - libjs-marked
-#       - libjs-moment
-#       - libjs-requirejs
-#       - libjs-requirejs-text
-#       - libjs-text-encoding
-#       - libjs-underscore
-#       - libjs-xterm
-#       - liblua5.1-0
-#       - pandoc
+        - llvm-7-dev
+        - pybind11-dev
+        # python3-scipy
+        # python3-sklearn
+        # python3-sklearn-pandas
+    - name: Fix llvm-config path with symblic link
+      file:
+          src: "llvm-config-7"
+          dest: "/usr/bin/llvm-config"
+          state: link
     - name: Upgrade pip
       become: "yes"
       pip:
@@ -75,6 +77,8 @@
       pip:
         executable: pip3
         name:
+            - cython
+            - pybind11
             - pandas
             - matplotlib
             - tqdm
@@ -84,10 +88,14 @@
             - future
             - mock
             - h5py
+    - name: Install Keras, Scipy...
+      become: "yes"
+      pip:
+        executable: pip3
+        name:
             - keras_preprocessing
             - keras_applications
             - gast
-            - enum34
             - futures
             - protobuf
             - grpcio
@@ -101,6 +109,9 @@
             - termcolor
             - wrapt
             - google-pasta
+            - librosa
+            - sklearn
+            - sklearn-pandas
     - name: Install TensorFlow
       become: "yes"
       pip:
