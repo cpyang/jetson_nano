@@ -1,7 +1,7 @@
 ---
 - name: Python environment & computing packages installation
   connection: ssh
-  gather_facts: false
+  gather_facts: true
   hosts: all
   tasks:
     - name: Install a Python3 VENV and pip
@@ -112,6 +112,23 @@
             - librosa
             - sklearn
             - sklearn-pandas
+    - name: Install CUDA-related packages
+      become: "no"
+      environment:
+        PATH: "/usr/local/cuda-10.0/bin:{{ ansible_env.PATH }}"
+        LD_LIBRARY_PATH: "/usr/local/cuda-10.0/lib64:{{ ansible_env.LD_LIBRARY_PATH | default('') }}"
+        LIBRARY_PATH: "{{ ansible_env.LIBRARY_PATH | default('') }}:/usr/local/cuda-10.0/targets/aarch64-linux/lib"
+        CPATH: "{{ ansible_env.CPATH | default('') }}:/usr/local/cuda-10.0/targets/aarch64-linux/include"
+        CUDA_HOME: "/usr/local/cuda-10.0"
+        CUDA_BIN_DIR: "/usr/local/cuda-10.0/bin"
+        CUDA_LIB_DIR: "/usr/local/cuda-10.0/lib64"
+        CUDA_INC_DIR: "/usr/local/cuda-10.0/include"
+      pip:
+        executable: pip3
+        extra_args: --user
+        name:
+            - pycuda
+            - scikit-cuda
     - name: Install TensorFlow
       become: "yes"
       pip:
